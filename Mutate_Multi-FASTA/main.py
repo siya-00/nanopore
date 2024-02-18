@@ -12,7 +12,7 @@ with gzip.open(input_file, 'rt') as f_in:
         for line in f_in:
             f_out.write(line)
 
-# Step 2: Extract subsequences from input fasta using custom bed file
+# Step 2: Extract and mutate subsequences from input fasta using custom bed file
 bed_file = "bed_file.bed"
 
 subsequences = []
@@ -28,7 +28,7 @@ with open(bed_file) as bed_handle:
                 for record in SeqIO.parse(fasta_handle, "fasta"):
                     subsequence = record.seq[start-1:end]  # Adjusting 0-based indexing
                     subsequence = subsequence.reverse_complement()  # Reverse complement the subsequence
-                    mutated_seq = Seq(str(subsequence).replace("A", "C", 1))  # Mutate the sequence (Replacing the first occurrence of adenine (A) with cytosine (C) in the subsequence)
+                    mutated_seq = Seq(str(subsequence).replace("A", "C", 1))  # Replacing the first occurrence of adenine (A) with cytosine (C) in the subsequence
                     record.seq = record.seq[:start-1] + Seq(mutated_seq) + record.seq[end:]  # Replace old subsequence with mutated one
                     subsequences.append(record)
 
